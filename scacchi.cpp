@@ -10,6 +10,7 @@ int main() {
 	do {
 		printBoard(board, color);
 		userInput(board, color);
+		
 	} while (win == 'x');
 }
 
@@ -21,7 +22,7 @@ void initBoard(int board[]) {
 	}
 	for (int i = 0; i < 8; i++) {
 		board[i] = temp;
-		board[i + 8*7] = temp + 6;
+		board[i + 8 * 7] = temp + 6;
 		if (i == 0 || i == 6) {
 			temp = 5;
 		}
@@ -80,8 +81,9 @@ void userInput(int board[], int color) {
 		}
 		x = input[0] -= 97;
 		if (input[1] < 57) {
-			y = input[1] -= 48;
-			if ((x >= 0 && y <= 7 && y >= 0) && (board[x + 8 * y] <= 6 + 6 * color && board[x + 8 * y] > 6 * color)) {
+			y = input[1] -= 49;
+//			cout << board[x + 8 * y];
+			if ((x >= 0 && x <= 7 && y >= 0) && (board[x + 8 * y] <= 6 + 6 * color && board[x + 8 * y] > 6 * color)) {
 				do {
 					flag = 1;
 					cout << "Insert landing spot: ";
@@ -93,8 +95,8 @@ void userInput(int board[], int color) {
 					if (input[1] < 57) {
 						color++;
 						color %= 2;
-						ny = input[1] -= 48;
-						if ((nx >= 0 && ny <= 7 && ny >= 0) && (board[nx + 8 * ny] <= 6 + 6 * color && board[nx + 8 * ny] > 6 * color) || board[nx + 8 * ny] == 0) {
+						ny = input[1] -= 49;
+						if ((nx >= 0 && nx <= 7 && ny >= 0) && (board[nx + 8 * ny] <= 6 + 6 * color && board[nx + 8 * ny] > 6 * color) || board[nx + 8 * ny] == 0) {
 							flag = 0;
 						}
 					}
