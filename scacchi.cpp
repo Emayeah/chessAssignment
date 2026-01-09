@@ -1,7 +1,7 @@
 #include <iostream>
 #include "firme.h"
 using namespace std;
-int pos, npos, x, y, nx, ny, checkFlag, tempColor, oldColor;
+int pos, npos, x, y, nx, ny, checkFlag, tempColor, oldColor, posbak, nposbak;
 // pawn = 6
 // king = 1
 // knight = 5
@@ -12,7 +12,7 @@ int main() {
 	int board[64]; // board, monodimensional array, i could make it global and bidimensional but monodimensional is just easier with less breaking potential
 	initBoard(board);
 	int color = 0;
-	int move;
+	int move, flag;
 	int bak, nbak;
 	char win = 'x';
 	do {
@@ -39,6 +39,8 @@ int main() {
 				move = king(board, nx - x, ny - y);
 			}
 			if (move == 0) {
+				posbak = pos;
+				nposbak = npos;
 				bak = board[pos];
 				nbak = board[npos];
 				board[npos] = board[pos];
@@ -52,7 +54,13 @@ int main() {
 		tempColor = color + 1;
 		tempColor %= 2;
 		oldColor = color;
-		calcCheck(board, color);
+		flag = calcCheck(board, color);
+		if (flag == 1) {
+			cout << "Invalid move, results in check\n";
+			color--;
+			board[posbak] = bak;
+			board[nposbak] = nbak;
+		}
 		color++;
 		color %= 2;
 	} while (win == 'x');
@@ -89,7 +97,8 @@ void initBoard(int board[]) {
 	// dev testing
 	board[20] = 3;
 	board[39] = 4;
-	board[35] = 10;
+//	board[35] = 2;
+//	board[45] = 5;
 }
 
 void printBoard(int board[], int color) {
@@ -280,12 +289,13 @@ int bishop(int board[], int x2, int y2) {
 	}
 	if (x2 == y2) {
 		for (int i = 1; i < x2 + checkFlag; i++) {
-			if (board[pos + (i * flag) + (8 * i * flag2)] == 1 + 6 * oldColor) {
+			if (checkFlag == 1 && board[pos + (i * flag) + (8 * i * flag2)] == 1 + 6 * oldColor) {
 				return 2;
 			}
 			if (board[pos + (i * flag) + (8 * i * flag2)] != 0) {
 				return 1;
 			}
+			board[pos + (i * flag) + (8 * i * flag2)] = 20;
 		}
 		return 0;
 	}
@@ -314,12 +324,27 @@ int calcCheck(int board[], int color) {
 		move = 0;
 		x2 = i % 8;
 		y2 = i / 8;
-		if (board[pos] == 5 + 6 * color) {
+		if (board[pos] == 5 + 6 * tempColor) {
+			for (int j = -2; j <= 2 && move != 2; j++) {
+				if (j == 0) {
+					j++;
+				}
+				for (int k = -2; k <= 2 && move != 2; k++) {
+					if (k == 0) {
+						k++;
+					}
+					if (x2 - j >= 0 && x2 + j < 8 && y2 - k >= 0 && y2 + k < 8) {
+						if (board[pos + j + k * 8] == 1 + 6 * oldColor) {
+							move = 2;
+						}
+					}
+				}
+			}
 		}
 		else if (board[pos] == 6 + 6 * color) {
 //			move = pawn(board, color, nx - x, ny - y);
 		}
-		else if (board[i] == 3 + 6 * tempColor) {
+		else if (board[i] == 3 + 6 * tempColor || board[i] == 2 + 6 * tempColor) {
 			for (int j = 0; j < 4 && move != 2; j++) {
 				if (j == 0) {
 					tempx = 7 - x2;
@@ -339,9 +364,9 @@ int calcCheck(int board[], int color) {
 //				cout << i << endl;
 			}
 		}
-		else if (board[i] == 4 + 6 * tempColor) {
-			//move = bishopCheck(board);
-			for (int j = 0; j < 4 && move != 2; j++) {
+		if (board[i] == 4 + 6 * tempColor || (board[i] == 2 + 6 * tempColor && move != 2)) {
+			move = bishopCheck(board);
+/*			for (int j = 0; j < 4 && move != 2; j++) {
 				if (j == 0) {
 					tempx = 7 - x2;
 					tempy = tempx;
@@ -352,15 +377,15 @@ int calcCheck(int board[], int color) {
 				}
 				else if (j == 2) {
 					tempy = 7 - y2;
-					tempx = -tempy;
+					tempx = tempy;
 				}
 				else if (j == 3) {
 					tempy = -7 + y2;
-					tempx = -tempy;
-				}
-				move = bishop(board, tempx, tempy);
+					tempx = tempy;
+				}*/
+				//move = bishop(board, tempx, tempy);
 //				cout << i << endl;
-			}
+			//}
 //			move = bishop(board, nx - x, ny - y);
 		}
 		else if (board[pos] == 2 + 6 * color) {
@@ -370,22 +395,20 @@ int calcCheck(int board[], int color) {
 //			move = king(board, nx - x, ny - y);
 		}
 		if (move == 2) {
-			cout << "SCACCO\n";
+			return 1;
 		}
 	}
 	return 0;
 }
 
-/* int bishopCheck(int board[]) {
+int bishopCheck(int board[]) {
 	int flag = 0, i;
 	int temp, temp2;
-	temp2 = pos % 8;
-	temp = pos / 8;
+	temp = pos % 8;
+	temp2 = pos / 8;
 	i = 1;
-	cout << endl << temp + i << " " << temp2 + i << " " << board[pos + i + 8 * i] << endl;
-	cout << temp2 << endl << endl;
 	while (temp + i < 7 && temp2 + i < 7 && board[pos + i + 8 * i] == 0) {
-		board[pos + i + 8 * i];
+		i++;
 		if (board[pos + i + 8 * i] == 1 + 6 * oldColor) {
 			cout << "how the fuck";
 			return 2;
@@ -394,43 +417,29 @@ int calcCheck(int board[], int color) {
 			cout << "what the fuck";
 			board[pos + i + 8 * i] = 20;
 		}
-		board[pos + i + 8 * i] = 20;
-		i++;
 	}
-	cout << board[pos + i + 8 * i];
 	//board[pos + i + 8 * i] = 20;
 	i = 1;
-	while (temp + i < 7 && temp2 - i >= 0 && board[pos + i - 8 * i] == 0) {
+	while (temp + i < 7 && temp2 - i > 0 && board[pos + i - 8 * i] == 0) {
+		i++;
 		if (board[pos + i - 8 * i] == 1 + 6 * oldColor) {
 			return 2;
 		}
-               else {
-                        board[pos + i - 8 * i] = 20;
-                }
-
-		i++;
 	}
 	i = 1;
-	while (temp - i >= 0 && temp2 + i < 7 && board[pos - i + 8 * i] == 0) {
+	while (temp - i > 0 && temp2 + i < 7 && board[pos - i + 8 * i] == 0) {
+		i++;
 		if (board[pos - i + 8 * i] == 1 + 6 * oldColor) {
 			return 2;
 		}
-               else {
-                        board[pos - i + 8 * i] = 20;
-                }
-
-		i++;
 	}
 	i = 1;
-	while (temp - i >= 0 && temp2 - i >= 0 && board[pos - i - 8 * i] == 0) {
+	while (temp - i > 0 && temp2 - i > 0 && board[pos - i - 8 * i] == 0) {
+		i++;
 		if (board[pos - i - 8 * i] == 1 + 6 * oldColor) {
 			return 2;
 		}
-               else {
-                        board[pos - i - 8 * i] = 20;
-                }
-
-		i++;
 	}
+	cout << endl;
 	return 0;
-}*/
+}
