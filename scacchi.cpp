@@ -31,6 +31,9 @@ int main() {
 			else if (board[pos] == 4 + 6 * color) {
 				move = bishop(board, nx - x, ny - y);
 			}
+			else if (board[pos] == 2 + 6 * color) {
+				move = queen(board, nx - x, ny - y);
+			}
 			if (move == 0) {
 				board[npos] = board[pos];
 				board[pos] = 0;
@@ -203,7 +206,7 @@ int pawn(int board[], int color, int x2, int y2) {
 	}
 	else if ((x2 == 1 || x2 == -1) && (board[npos] <= 12 - 6 * color && board[npos] > 6 - 6 * color)) {
 		if (y2 == 1 + -2 * color) {
-			if (pos + 8 - 8 * (2 * color) + y2 == npos) {
+			if (pos + 8 - 8 * (2 * color) + y2 - (2 * y2 * color) == npos) {
 				return 0;
 			}
 		}
@@ -260,4 +263,12 @@ int bishop(int board[], int x2, int y2) {
 		return 0;
 	}
 	return 1;
+}
+
+int queen(int board[], int x2, int y2) {
+	int move = rook(board, x2, y2);
+	if (move == 1) {
+		move = bishop(board, x2, y2);
+	}
+	return move;
 }
