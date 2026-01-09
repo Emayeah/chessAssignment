@@ -28,15 +28,19 @@ int main() {
 			else if (board[pos] == 3 + 6 * color) {
 				move = rook(board, nx - x, ny - y);
 			}
-			//else if (board[pos]
+			else if (board[pos] == 4 + 6 * color) {
+				move = bishop(board, nx - x, ny - y);
+			}
 			if (move == 0) {
 				board[npos] = board[pos];
 				board[pos] = 0;
 			}
 			else if (move == 1) {
-				cout << "Mossa invalida\n";
+				cout << "Invalid move\n";
 			}
 		} while (move == 1);
+		color++;
+		color %= 2;
 	} while (win == 'x');
 }
 
@@ -72,6 +76,13 @@ void initBoard(int board[]) {
 
 void printBoard(int board[], int color) {
 	for (int i = 0; i < 8; i++) {
+		if (color == 0) {
+			cout << 8 - i;
+		}
+		else {
+			cout << i + 1;
+		}
+		cout << "  ";
 		for (int j = 7; j >= 0; j--) {
 			if (color == 1) {
 				if (board[j + 8 * i] == 0) {
@@ -94,6 +105,16 @@ void printBoard(int board[], int color) {
 		}
 		cout << endl;
 	}
+	cout << "   ";
+	for (int i = 0; i < 8; i++) {
+		if (color == 0) {
+			cout << (char)('a' + i) << " |";
+		}
+		else {
+			cout << (char)('a' + (7 - i)) << " |";
+		}
+	}
+	cout << endl;
 }
 
 void userInput(int board[], int color) {
@@ -191,14 +212,13 @@ int pawn(int board[], int color, int x2, int y2) {
 }
 
 int rook(int board[], int x2, int y2) {
-	int flag = 1, off;
+	int flag = 1;
 	if (x2 == 0) {
-		off = y2;
-		if (off < 0) {
+		if (y2 < 0) {
 			flag = -1;
-			off *= -1;
+			y2 *= -1;
 		}
-		for (int i = 1; i < off; i++) {
+		for (int i = 1; i < y2; i++) {
 			if (board[pos + (8 * i * flag)] != 0) {
 				return 1;
 			}
@@ -206,13 +226,12 @@ int rook(int board[], int x2, int y2) {
 		return 0;
 	}
 	else if (y2 == 0) {
-		off = x2;
-		if (off < 0) {
+		if (x2 < 0) {
 			flag = -1;
-			off *= -1;
+			x2 *= -1;
 		}
 
-		for (int i = 1; i < off; i++) {
+		for (int i = 1; i < x2; i++) {
 			if (board[pos + (i * flag)] != 0) {
 				return 1;
 			}
@@ -223,5 +242,22 @@ int rook(int board[], int x2, int y2) {
 }
 
 int bishop(int board[], int x2, int y2) {
-	
+	int flag = 1, flag2 = 1;
+	if (x2 < 0) {
+		flag = -1;
+		x2 *= -1;
+	}
+	if (y2 < 0) {
+		flag2 = -1;
+		y2 *= -1;
+	}
+	if (x2 == y2) {
+		for (int i = 1; i < x2; i++) {
+			if (board[pos + (i * flag) + (8 * i * flag2)] != 0) {
+				return 1;
+			}
+		}
+		return 0;
+	}
+	return 1;
 }
