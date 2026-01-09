@@ -1,16 +1,34 @@
+
 #include <iostream>
 #include "firme.h"
 using namespace std;
+int pos, npos;
+// pawn = 6
+// king = 1
+// knight = 5
+// bishop = 4
+// rook = 3
 
 int main() {
 	int board[64]; // board, monodimensional array
 	initBoard(board);
 	int color = 0;
-	char win = 'a';
+	int x, y, nx, ny;
+	int move;
+	char win = 'x';
 	do {
 		printBoard(board, color);
-		userInput(board, color);
-		
+		userInput(board, color, &x, &y, &nx, &ny);
+		if (board[pos] == 5 + 6 * color) {
+			move = knight(&x, &y, &nx, &ny);
+		}
+		else if (board[pos] == 6 + 6 * color) {
+			//move = pawn(&x, &y, &nx, &ny);
+		}
+		if (move == 0) {
+			board[npos] = board[pos];
+			board[pos] = 0;
+		}
 	} while (win == 'x');
 }
 
@@ -63,7 +81,7 @@ void printBoard(int board[], int color) {
 	}
 }
 
-void userInput(int board[], int color) {
+void userInput(int board[], int color, int* x2, int* y2, int* nx2, int* ny2) {
 	int x, y, nx, ny, flag;
 	char input[3];
 	do {
@@ -82,29 +100,35 @@ void userInput(int board[], int color) {
 		x = input[0] -= 97;
 		if (input[1] < 57) {
 			y = input[1] -= 49;
-//			cout << board[x + 8 * y];
-			if ((x >= 0 && x <= 7 && y >= 0) && (board[x + 8 * y] <= 6 + 6 * color && board[x + 8 * y] > 6 * color)) {
+			pos = x + 8 * y;
+			if ((x >= 0 && x <= 7 && y >= 0) && (board[pos] <= 6 + 6 * color && board[pos] > 6 * color)) {
 				do {
 					flag = 1;
-					cout << "Insert landing spot: ";
+					cout << "Insert landing spot (x to cancel): ";
 					cin >> input;
-					if (input[0] < 97) {
-						input[0] += 32;
-					}
-					nx = input[0] -= 97;
-					if (input[1] < 57) {
-						color++;
-						color %= 2;
-						ny = input[1] -= 49;
-						if ((nx >= 0 && nx <= 7 && ny >= 0) && (board[nx + 8 * ny] <= 6 + 6 * color && board[nx + 8 * ny] > 6 * color) || board[nx + 8 * ny] == 0) {
-							flag = 0;
+					if (input[0] != 'x') {
+						if (input[0] < 97) {
+							input[0] += 32;
+						}
+						nx = input[0] -= 97;
+						if (input[1] < 57) {
+							color++;
+							color %= 2;
+							ny = input[1] -= 49;
+							npos = nx + 8 * ny;
+							if ((nx >= 0 && nx <= 7 && ny >= 0) && (board[npos] <= 6 + 6 * color && board[npos] > 6 * color) || board[npos] == 0) {
+								flag = 0;
+							}
+						}
+						if (flag) {
+							cout << "Invalid landing spot\n";
+							color--;
 						}
 					}
-					if (flag) {
-						cout << "Invalid landing spot\n";
-						color--;
+					else {
+						flag = 2;
 					}
-				} while (flag);
+				} while (flag == 1);
 			}
 			else {
 				flag = 1;
@@ -113,8 +137,31 @@ void userInput(int board[], int color) {
 		else {
 			flag = 1;
 		}
-		if (flag) {
+		if (flag == 1) {
 			cout << "Invalid piece selection\n";
 		}
-	} while (flag);
+	} while (flag == 1 || flag == 2);
+	*nx2 = nx;
+	*ny2 = ny;
+	*x2 = x;
+	*y2 = y;
+}
+
+int knight(int* x, int* y, int* nx, int* ny) {
+	int temp, temp2;
+	temp = *x - *nx;
+	temp2 = *y - *ny;
+	if (temp < 0) {
+		temp *= -1;
+	}
+	if (temp2 < 0) {
+		temp2 *= -1;
+	}
+	if (temp == 1 && temp2 == 2) {
+		return 0;
+	}
+	else if (temp == 2 && temp2 == 1) {
+		return 0;
+	}
+	return 1;
 }
