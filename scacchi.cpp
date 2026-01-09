@@ -22,7 +22,7 @@ int main() {
 			move = knight(x - nx, y - ny);
 		}
 		else if (board[pos] == 6 + 6 * color) {
-//			move = pawn(color, nx - x, y - ny);
+			move = pawn(board, color, nx - x, ny - y);
 		}
 		if (move == 0) {
 			board[npos] = board[pos];
@@ -111,17 +111,14 @@ void userInput(int board[], int color) {
 						}
 						nx = input[0] -= 97;
 						if (input[1] < 57) {
-							color++;
-							color %= 2;
 							ny = input[1] -= 49;
 							npos = nx + 8 * ny;
-							if ((nx >= 0 && nx <= 7 && ny >= 0) && (board[npos] <= 6 + 6 * color && board[npos] > 6 * color) || board[npos] == 0) {
+							if ((nx >= 0 && nx <= 7 && ny >= 0) && ((board[npos] <= 12 - 6 * color && board[npos] > 6 - 6 * color) || board[npos] == 0)) {
 								flag = 0;
 							}
 						}
 						if (flag) {
 							cout << "Invalid landing spot\n";
-							color--;
 						}
 					}
 					else {
@@ -142,28 +139,38 @@ void userInput(int board[], int color) {
 	} while (flag == 1 || flag == 2);
 }
 
-int knight(int x, int y) {
-	if (x < 0) {
-		x *= -1;
+int knight(int x2, int y2) {
+	if (x2 < 0) {
+		x2 *= -1;
 	}
-	if (y < 0) {
-		y *= -1;
+	if (y2 < 0) {
+		y2 *= -1;
 	}
-	if (x == 1 && y == 2) {
+	if (x2 == 1 && y2 == 2) {
 		return 0;
 	}
-	if (x == 2 && y == 1) {
+	if (x2 == 2 && y2 == 1) {
 		return 0;
 	}
 	return 1;
 }
 
-/*int pawn(int color, int x, int y, int start) {
-	if (y == 0 && board[npos] == 0)
-		if (x == 1 + -2 * color) {
+int pawn(int board[], int color, int x2, int y2) {
+	if (x2 == 0 && board[npos] == 0) {
+		if (y2 == 1 + -2 * color) { // classic one forward
 			return 0;
 		}
-		else if (x == 2 + -4 * color && 
+		else if (y2 == 2 + -4 * color && y == 1 + 5 * color && board[npos - 8 + 8 * (2 * color)] == 0) { // 2 forward
+			return 0;
+		}
 	}
+	else if ((x2 == 1 || x2 == -1) && (board[npos] <= 12 - 6 * color && board[npos] > 6 - 6 * color)) {
+		if (y2 == 1 + -2 * color) {
+			if (pos + 8 - 8 * (2 * color) + y2 == npos) {
+				return 0;
+			}
+		}
+	}
+	return 1;
 }
-*/
+
