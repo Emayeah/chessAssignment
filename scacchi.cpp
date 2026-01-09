@@ -16,18 +16,26 @@ int main() {
 	int move;
 	char win = 'x';
 	do {
-		printBoard(board, color);
-		userInput(board, color);
-		if (board[pos] == 5 + 6 * color) {
-			move = knight(x - nx, y - ny);
-		}
-		else if (board[pos] == 6 + 6 * color) {
-			move = pawn(board, color, nx - x, ny - y);
-		}
-		if (move == 0) {
-			board[npos] = board[pos];
-			board[pos] = 0;
-		}
+		do {
+			printBoard(board, color);
+			userInput(board, color);
+			if (board[pos] == 5 + 6 * color) {
+				move = knight(x - nx, y - ny);
+			}
+			else if (board[pos] == 6 + 6 * color) {
+				move = pawn(board, color, nx - x, ny - y);
+			}
+			else if (board[pos == 3 + 6 * color]) {
+				move = rook(board, nx - x, ny - y);
+			}
+			if (move == 0) {
+				board[npos] = board[pos];
+				board[pos] = 0;
+			}
+			if (move == 1) {
+				cout << "Mossa invalida\n";
+			}
+		} while (move == 1);
 	} while (win == 'x');
 }
 
@@ -40,10 +48,10 @@ void initBoard(int board[]) {
 	for (int i = 0; i < 8; i++) {
 		board[i] = temp;
 		board[i + 8 * 7] = temp + 6;
-		if (i == 0 || i == 6) {
+		if (i == 0 || i == 5) {
 			temp = 5;
 		}
-		else if (i == 1 || i == 5) {
+		else if (i == 1 || i == 4) {
 			temp = 4;
 		}
 		else if (i == 2) {
@@ -63,17 +71,24 @@ void initBoard(int board[]) {
 
 void printBoard(int board[], int color) {
 	for (int i = 0; i < 8; i++) {
-		for (int j = 0; j < 8; j++) {
-			if (board[j + 8 * i] == 0) {
-				cout << "__|";
-			}
-			else if (color == 0) {
-				cout << '\xe2' << '\x99' << (char)(board[j + 8 * i] + 147);
-				cout << " |";
+		for (int j = 7; j >= 0; j--) {
+			if (color == 1) {
+				if (board[j + 8 * i] == 0) {
+					cout << "__|";
+				}
+				else {
+					cout << '\xe2' << '\x99' << (char)(board[j + 8 * i] + 147);
+					cout << " |";
+				}
 			}
 			else {
-				cout << '\xe2' << '\x99' << (char)(board[8 - j + (8 * (7 - i))] + 147);
-				cout << " |";
+				if (board[63 - (j + 8 * i)] == 0) {
+					cout << "__|";
+				}
+				else {
+					cout << '\xe2' << '\x99' << (char)(board[63 - (j + 8 * i)] + 147);
+					cout << " |";
+				}
 			}
 		}
 		cout << endl;
@@ -174,3 +189,34 @@ int pawn(int board[], int color, int x2, int y2) {
 	return 1;
 }
 
+int rook(int board[], int x2, int y2) {
+	int flag = 1, off;
+	if (x2 == 0) {
+		off = y2;
+		if (off < 0) {
+			flag = -1;
+			off *= -1;
+		}
+		for (int i = 1; i < off; i++) {
+			if (board[pos + (8 * i * flag)] != 0) {
+				return 1;
+			}
+		}
+		return 0;
+	}
+	else if (y2 == 0) {
+		off = x2;
+		if (off < 0) {
+			flag = -1;
+			off *= -1;
+		}
+
+		for (int i = 1; i < off; i++) {
+			if (board[pos + (i * flag)] != 0) {
+				return 1;
+			}
+		}
+		return 0;
+	}
+	return 1;
+}
