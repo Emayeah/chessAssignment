@@ -2,7 +2,7 @@
 #include <iostream>
 #include "firme.h"
 using namespace std;
-int pos, npos, x, y, nx, ny;
+int pos, npos, x, y, nx, ny, checkFlag, tempColor, oldColor;
 // pawn = 6
 // king = 1
 // knight = 5
@@ -14,9 +14,11 @@ int main() {
 	initBoard(board);
 	int color = 0;
 	int move;
+	int bak, nbak;
 	char win = 'x';
 	do {
 		do {
+			checkFlag = 0;
 			printBoard(board, color);
 			userInput(board, color);
 			if (board[pos] == 5 + 6 * color) {
@@ -34,7 +36,12 @@ int main() {
 			else if (board[pos] == 2 + 6 * color) {
 				move = queen(board, nx - x, ny - y);
 			}
+			else if (board[pos] == 1 + 6 * color) {
+				move = king(board, nx - x, ny - y);
+			}
 			if (move == 0) {
+				bak = board[pos];
+				nbak = board[npos];
 				board[npos] = board[pos];
 				board[pos] = 0;
 			}
@@ -42,6 +49,11 @@ int main() {
 				cout << "Invalid move\n";
 			}
 		} while (move == 1);
+		checkFlag = 1;
+		tempColor = color + 1;
+		tempColor %= 2;
+		oldColor = color;
+		calcCheck(board, color);
 		color++;
 		color %= 2;
 	} while (win == 'x');
@@ -75,6 +87,8 @@ void initBoard(int board[]) {
 	for (int i = 16; i < 48; i++) {
 		board[i] = 0;
 	}
+	// dev testing
+	board[20] = 3;
 }
 
 void printBoard(int board[], int color) {
@@ -222,6 +236,11 @@ int rook(int board[], int x2, int y2) {
 			y2 *= -1;
 		}
 		for (int i = 1; i < y2; i++) {
+			if (checkFlag == 1 && board[pos + i * 8 * flag] == 1 + 6 * oldColor) {
+				cout << pos + i * 8 << endl;
+				cout << board[pos + i * 8] << endl;
+				return 2;
+			}
 			if (board[pos + (8 * i * flag)] != 0) {
 				return 1;
 			}
@@ -233,8 +252,12 @@ int rook(int board[], int x2, int y2) {
 			flag = -1;
 			x2 *= -1;
 		}
-
 		for (int i = 1; i < x2; i++) {
+			if (checkFlag == 1 && board[pos + i * flag] == 1 + 6 * oldColor) {
+				cout << pos + i << endl;
+				cout << board[pos + i] << endl;
+				return 2;
+			}
 			if (board[pos + (i * flag)] != 0) {
 				return 1;
 			}
@@ -271,4 +294,56 @@ int queen(int board[], int x2, int y2) {
 		move = bishop(board, x2, y2);
 	}
 	return move;
+}
+
+int king(int board[], int x2, int y2) {
+	if ((x2 == 0 || x2 == 1 || x2 == -1) && (y2 == 0 || y2 == 1 || y2 == -1)) {
+		return queen(board, x2, y2);
+	}
+	return 0;
+}
+
+int calcCheck(int board[], int color) {
+	int x2, y2, tempx, tempy, move;
+	for (int i = 0; i < 64; i++) {
+		pos = i;
+		move = 0;
+		x2 = i % 8;
+		y2 = i - x2;
+		if (board[pos] == 5 + 6 * color) {
+		}
+		else if (board[pos] == 6 + 6 * color) {
+//			move = pawn(board, color, nx - x, ny - y);
+		}
+		else if (board[i] == 3 + 6 * tempColor) { //|| board[i] == 2 + 6 * tempColor) {
+			for (int j = 0; j < 4 && move != 2; j++) {
+				if (j == 0) {
+					tempx = 8 - x2;
+					tempy = 0;
+				}
+				else if (j == 1) {
+					tempx = -8 + x2;
+				}
+				else if (j == 2) {
+					tempy = 8 - y2;
+					tempx = 0;
+				}
+				else if (j == 3) {
+					tempy = -8 + y2;
+				}
+				move = rook(board, tempx, tempy);
+				cout << i << endl;
+			}
+		}
+		else if (board[pos] == 4 + 6 * color) {
+//			move = bishop(board, nx - x, ny - y);
+		}
+		else if (board[pos] == 2 + 6 * color) {
+//			move = queen(board, nx - x, ny - y);
+		}
+		else if (board[pos] == 1 + 6 * color) {
+//			move = king(board, nx - x, ny - y);
+		}
+	}
+	return 0;
 }
