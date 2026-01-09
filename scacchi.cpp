@@ -279,6 +279,9 @@ int bishop(int board[], int x2, int y2) {
 	}
 	if (x2 == y2) {
 		for (int i = 1; i < x2; i++) {
+			if (checkFlag == 1 && board[pos + (i * flag) + (8 * i * flag2)] == 1 + 6 * oldColor) {
+				return 2;
+			}
 			if (board[pos + (i * flag) + (8 * i * flag2)] != 0) {
 				return 1;
 			}
@@ -315,7 +318,7 @@ int calcCheck(int board[], int color) {
 		else if (board[pos] == 6 + 6 * color) {
 //			move = pawn(board, color, nx - x, ny - y);
 		}
-		else if (board[i] == 3 + 6 * tempColor) { //|| board[i] == 2 + 6 * tempColor) {
+		else if (board[i] == 3 + 6 * tempColor) {
 			for (int j = 0; j < 4 && move != 2; j++) {
 				if (j == 0) {
 					tempx = 8 - x2;
@@ -335,7 +338,25 @@ int calcCheck(int board[], int color) {
 				cout << i << endl;
 			}
 		}
-		else if (board[pos] == 4 + 6 * color) {
+		else if (board[i] == 4 + 6 * color) {
+			for (int j = 0; j < 4 && move != 2; j++) {
+				if (j == 0) {
+					tempx = 8 - x2;
+					tempy = tempx;
+				}
+				else if (j == 1) {
+					tempy = 0 - tempx;
+				}
+				else if (j == 2) {
+					tempy = 8 - y2;
+					tempx = tempy;
+				}
+				else if (j == 3) {
+					tempx = 0 - tempy;
+				}
+				move = bishop(board, tempx, tempy);
+				cout << i << endl;
+			}
 //			move = bishop(board, nx - x, ny - y);
 		}
 		else if (board[pos] == 2 + 6 * color) {
