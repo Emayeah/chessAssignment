@@ -4,3 +4,4 @@ void userInput(int[], int);
 int knight(int, int);
 int pawn(int[], int, int, int);
 int rook(int[], int, int);
+int bishop(int[], int, int);

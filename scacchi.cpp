@@ -25,14 +25,15 @@ int main() {
 			else if (board[pos] == 6 + 6 * color) {
 				move = pawn(board, color, nx - x, ny - y);
 			}
-			else if (board[pos == 3 + 6 * color]) {
+			else if (board[pos] == 3 + 6 * color) {
 				move = rook(board, nx - x, ny - y);
 			}
+			//else if (board[pos]
 			if (move == 0) {
 				board[npos] = board[pos];
 				board[pos] = 0;
 			}
-			if (move == 1) {
+			else if (move == 1) {
 				cout << "Mossa invalida\n";
 			}
 		} while (move == 1);
@@ -219,4 +220,8 @@ int rook(int board[], int x2, int y2) {
 		return 0;
 	}
 	return 1;
+}
+
+int bishop(int board[], int x2, int y2) {
+	
 }
