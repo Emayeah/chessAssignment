@@ -2,7 +2,7 @@
 #include <iostream>
 #include "firme.h"
 using namespace std;
-int pos, npos;
+int pos, npos, x, y, nx, ny;
 // pawn = 6
 // king = 1
 // knight = 5
@@ -10,20 +10,19 @@ int pos, npos;
 // rook = 3
 
 int main() {
-	int board[64]; // board, monodimensional array
+	int board[64]; // board, monodimensional array, i could make it global and bidimensional but monodimensional is just easier with less breaking potential
 	initBoard(board);
 	int color = 0;
-	int x, y, nx, ny;
 	int move;
 	char win = 'x';
 	do {
 		printBoard(board, color);
-		userInput(board, color, &x, &y, &nx, &ny);
+		userInput(board, color);
 		if (board[pos] == 5 + 6 * color) {
-			move = knight(&x, &y, &nx, &ny);
+			move = knight(x - nx, y - ny);
 		}
 		else if (board[pos] == 6 + 6 * color) {
-			//move = pawn(&x, &y, &nx, &ny);
+//			move = pawn(color, nx - x, y - ny);
 		}
 		if (move == 0) {
 			board[npos] = board[pos];
@@ -81,8 +80,8 @@ void printBoard(int board[], int color) {
 	}
 }
 
-void userInput(int board[], int color, int* x2, int* y2, int* nx2, int* ny2) {
-	int x, y, nx, ny, flag;
+void userInput(int board[], int color) {
+	int flag;
 	char input[3];
 	do {
 		flag = 0;
@@ -141,27 +140,30 @@ void userInput(int board[], int color, int* x2, int* y2, int* nx2, int* ny2) {
 			cout << "Invalid piece selection\n";
 		}
 	} while (flag == 1 || flag == 2);
-	*nx2 = nx;
-	*ny2 = ny;
-	*x2 = x;
-	*y2 = y;
 }
 
-int knight(int* x, int* y, int* nx, int* ny) {
-	int temp, temp2;
-	temp = *x - *nx;
-	temp2 = *y - *ny;
-	if (temp < 0) {
-		temp *= -1;
+int knight(int x, int y) {
+	if (x < 0) {
+		x *= -1;
 	}
-	if (temp2 < 0) {
-		temp2 *= -1;
+	if (y < 0) {
+		y *= -1;
 	}
-	if (temp == 1 && temp2 == 2) {
+	if (x == 1 && y == 2) {
 		return 0;
 	}
-	else if (temp == 2 && temp2 == 1) {
+	if (x == 2 && y == 1) {
 		return 0;
 	}
 	return 1;
 }
+
+/*int pawn(int color, int x, int y, int start) {
+	if (y == 0 && board[npos] == 0)
+		if (x == 1 + -2 * color) {
+			return 0;
+		}
+		else if (x == 2 + -4 * color && 
+	}
+}
+*/
