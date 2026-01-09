@@ -8,3 +8,4 @@ int bishop(int[], int, int);
 int queen(int[], int, int);
 int king(int[], int, int);
 int calcCheck(int[], int);
+//int bishopCheck(int[]);
