@@ -334,21 +334,7 @@ int calcCheck(int board[], int color) {
 			x2 = i % 8;
 			y2 = i / 8;
 			if (board[pos] == 5 + 6 * tempColor) {
-				for (int j = -2; j <= 2 && move != 2; j++) {
-					if (j == 0) {
-						j++;
-					}
-					for (int k = -2; k <= 2 && move != 2; k++) {
-						if (k == 0) {
-							k++;
-						}
-						if (x2 - j >= 0 && x2 + j < 8 && y2 - k >= 0 && y2 + k < 8) {
-							if (board[pos + j + k * 8] == 1 + 6 * oldColor) {
-								move = 2;
-							}
-						}
-					}
-				}
+				move = knightCheck(board);
 			}
 			else if (board[pos] == 6 + 6 * tempColor) {
 				move = pawnCheck(board);
@@ -500,6 +486,28 @@ int kingCheck(int board[]) {
 		for (int j = -1; j < 1; j++) {
 			if (x2 + i > 0 && x2 + i < 7 && y2 + i > 0 && y2 + i < 7 && board[pos + i + 8 * j] == 1 + 6 * oldColor) {
 				return 2;
+			}
+		}
+	}
+	return 0;
+}
+
+int knightCheck(int board[]) {
+	int x2, y2;
+	x2 = pos % 8;
+	y2 = pos / 8;
+	for (int j = -2; j <= 2; j++) {
+		if (j == 0) {
+			j++;
+		}
+		for (int k = -2; k <= 2; k++) {
+			if (k == 0) {
+				k++;
+			}
+			if (x2 - j >= 0 && x2 + j < 8 && y2 - k >= 0 && y2 + k < 8) {
+				if (board[pos + j + k * 8] == 1 + 6 * oldColor) {
+					return 2;
+				}
 			}
 		}
 	}

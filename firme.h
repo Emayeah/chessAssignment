@@ -13,3 +13,4 @@ int rookCheck(int[]);
 int queenCheck(int[]);
 int pawnCheck(int[]);
 int kingCheck(int[]);
+int knightCheck(int[]);
