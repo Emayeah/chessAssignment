@@ -230,9 +230,7 @@ int pawn(int board[], int color, int x2, int y2) {
 		}
 	}
 	else if ((x2 == 1 || x2 == -1) && (board[npos] <= 12 - 6 * color && board[npos] > 6 - 6 * color)) {
-		cout << "1 ";
 		if (y2 == 1 + -2 * color) {
-			cout << "2 ";
 			if (pos + 8 - 8 * (2 * color) + x2 == npos) {
 				return 0;
 			}
@@ -250,8 +248,6 @@ int rook(int board[], int x2, int y2) {
 		}
 		for (int i = 1; i < y2 + checkFlag; i++) {
 			if (checkFlag == 1 && board[pos + i * 8 * flag] == 1 + 6 * oldColor) {
-				cout << pos + i * 8 << endl;
-				cout << board[pos + i * 8] << endl;
 				return 2;
 			}
 			if (board[pos + (8 * i * flag)] != 0) {
@@ -267,8 +263,6 @@ int rook(int board[], int x2, int y2) {
 		}
 		for (int i = 1; i < x2 + checkFlag; i++) {
 			if (checkFlag == 1 && board[pos + i * flag] == 1 + 6 * oldColor) {
-				cout << pos + i << endl;
-				cout << board[pos + i] << endl;
 				return 2;
 			}
 			if (board[pos + (i * flag)] != 0) {
@@ -398,11 +392,9 @@ int bishopCheck(int board[]) {
 	while (temp + i < 7 && temp2 + i < 7 && board[pos + i + 8 * i] == 0) {
 		i++;
 		if (board[pos + i + 8 * i] == 1 + 6 * oldColor) {
-			cout << "how the fuck";
 			return 2;
 		}
 		if (board[pos + i + 8 * i] == 0) {
-			cout << "what the fuck";
 			board[pos + i + 8 * i] = 20;
 		}
 	}
@@ -428,7 +420,6 @@ int bishopCheck(int board[]) {
 			return 2;
 		}
 	}
-	cout << endl;
 	return 0;
 }
 
