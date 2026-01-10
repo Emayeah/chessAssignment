@@ -1,7 +1,7 @@
 #include <iostream>
 #include "firme.h"
 using namespace std;
-int pos, npos, x, y, nx, ny, checkFlag, oppCheck, tempColor, oldColor, posbak, nposbak;
+int pos, npos, x, y, nx, ny, checkFlag, oppCheck, tempColor, oldColor, posbak, nposbak tempbak, ntempbak;
 // pawn = 6
 // king = 1
 // knight = 5
@@ -64,6 +64,7 @@ int main() {
 		}
 		else if (flag == 2) {
 			oppCheck = 1;
+			calcCheckmate(board, color);
 		}
 		else {
 			oppCheck = 0;
@@ -378,10 +379,12 @@ int calcCheck(int board[], int color) {
 				return temp;
 			}
 		}
-		temp++;
-		oldColor = tempColor;
-		tempColor++;
-		tempColor %= 2;
+		if (oppCheck != 1) {
+			temp++;
+			oldColor = tempColor;
+			tempColor++;
+			tempColor %= 2;
+		}
 	}
 	return 0;
 }
@@ -484,6 +487,10 @@ int kingCheck(int board[]) {
 	y2 = pos / 8;
 	for (int i = -1; i < 1; i++) {
 		for (int j = -1; j < 1; j++) {
+			if (oppCheck == 1 && x2 + i > 0 && x2 + i < 7 && y2 + i > 0 && y2 + i < 7 && (board[pos + i + 8 * j] == 0 || board[pos + i + 8 * j] > 6 * oldColor && board[pos + i + 8 * j] <= 6 + 6 * oldColor)) {
+				copy(board, pos + i + 8 * j);
+				return 1;
+			}
 			if (x2 + i > 0 && x2 + i < 7 && y2 + i > 0 && y2 + i < 7 && board[pos + i + 8 * j] == 1 + 6 * oldColor) {
 				return 2;
 			}
@@ -505,6 +512,10 @@ int knightCheck(int board[]) {
 				k++;
 			}
 			if (x2 - j >= 0 && x2 + j < 8 && y2 - k >= 0 && y2 + k < 8) {
+				if (oppCheck == 1 && (board[pos + i + 8 * j] == 0 || board[pos + i + 8 * j] > 6 * oldColor && board[pos + i + 8 * j] <= 6 + 6 * oldColor)) {
+					
+					return 1;
+				}
 				if (board[pos + j + k * 8] == 1 + 6 * oldColor) {
 					return 2;
 				}
@@ -512,4 +523,83 @@ int knightCheck(int board[]) {
 		}
 	}
 	return 0;
+}
+
+int calcCheckmate(int board[], int color) {
+	int x2, y2, tempx, tempy, move, temp, check;
+	temp = 1;
+	tempColor = color;
+	oldColor = color + 1;
+	oldColor %= 2;
+	int i = 0, skip = 0;
+	do {
+		pos = i;
+		move = 0;
+		x2 = i % 8;
+		y2 = i / 8;
+		if (board[pos] == 5 + 6 * tempColor) {
+			for (int j = 0; j < 8; j++) {
+				move = knightCheck(board);
+				if (move == 1) {
+					board[npos] = board[pos];
+					board[pos] = 0;
+					check = calcCheck();
+					if (check == 1) {
+						board[npos] = ntempbak;
+						board[pos] = tempbak;
+					}
+				}
+			}
+		}
+		else if (board[pos] == 6 + 6 * tempColor) {
+			move = pawnCheck(board);
+		}
+		else if (board[i] == 3 + 6 * tempColor) {
+				//move = rook(board, tempx, tempy);
+//				cout << i << endl;
+			move = rookCheck(board);
+		}
+		else if (board[i] == 4 + 6 * tempColor) {
+			move = bishopCheck(board);
+/*			for (int j = 0; j < 4 && move != 2; j++) {
+				if (j == 0) {
+					tempx = 7 - x2;
+					tempy = tempx;
+				}
+				else if (j == 1) {
+					tempx = -7 + x2;
+					tempy = tempx;
+				}
+				else if (j == 2) {
+					tempy = 7 - y2;
+					tempx = tempy;
+				}
+				else if (j == 3) {
+					tempy = -7 + y2;
+					tempx = tempy;
+				}*/
+				//move = bishop(board, tempx, tempy);
+//				cout << i << endl;
+			//}
+//			move = bishop(board, nx - x, ny - y);
+		}
+		else if (board[pos] == 2 + 6 * tempColor) {
+			move = queenCheck(board);
+		}
+		else if (board[pos] == 1 + 6 * tempColor) {
+			move = kingCheck(board);
+		}
+		if (move == 2) {
+			return temp;
+		}
+		i++;
+	} while (i < 64);
+	return 0;
+}
+
+void copy(int board[], int num) {
+	posbak = num;
+	tempbak = board[num];
+	npos = num + i + 8 * j;
+	ntempbak = board[npos];
 }

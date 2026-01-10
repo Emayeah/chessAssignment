@@ -14,3 +14,5 @@ int queenCheck(int[]);
 int pawnCheck(int[]);
 int kingCheck(int[]);
 int knightCheck(int[]);
+int calcCheckmate(int[], int);
+void copy(int[], int);
