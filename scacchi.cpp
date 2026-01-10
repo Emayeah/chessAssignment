@@ -98,6 +98,7 @@ void initBoard(int board[]) {
 	board[20] = 3;
 	board[39] = 4;
 //	board[35] = 2;
+	board[42] = 6;
 //	board[45] = 5;
 }
 
@@ -229,8 +230,10 @@ int pawn(int board[], int color, int x2, int y2) {
 		}
 	}
 	else if ((x2 == 1 || x2 == -1) && (board[npos] <= 12 - 6 * color && board[npos] > 6 - 6 * color)) {
+		cout << "1 ";
 		if (y2 == 1 + -2 * color) {
-			if (pos + 8 - 8 * (2 * color) + y2 - (2 * y2 * color) == npos) {
+			cout << "2 ";
+			if (pos + 8 - 8 * (2 * color) + x2 == npos) {
 				return 0;
 			}
 		}
@@ -342,29 +345,14 @@ int calcCheck(int board[], int color) {
 			}
 		}
 		else if (board[pos] == 6 + 6 * color) {
-//			move = pawn(board, color, nx - x, ny - y);
+			move = pawnCheck(board, color);
 		}
-		else if (board[i] == 3 + 6 * tempColor || board[i] == 2 + 6 * tempColor) {
-			for (int j = 0; j < 4 && move != 2; j++) {
-				if (j == 0) {
-					tempx = 7 - x2;
-					tempy = 0;
-				}
-				else if (j == 1) {
-					tempx = -7 + x2;
-				}
-				else if (j == 2) {
-					tempy = 7 - y2;
-					tempx = 0;
-				}
-				else if (j == 3) {
-					tempy = -7 + y2;
-				}
-				move = rook(board, tempx, tempy);
+		else if (board[i] == 3 + 6 * tempColor) {
+				//move = rook(board, tempx, tempy);
 //				cout << i << endl;
-			}
+			move = rookCheck(board);
 		}
-		if (board[i] == 4 + 6 * tempColor || (board[i] == 2 + 6 * tempColor && move != 2)) {
+		else if (board[i] == 4 + 6 * tempColor) {
 			move = bishopCheck(board);
 /*			for (int j = 0; j < 4 && move != 2; j++) {
 				if (j == 0) {
@@ -388,10 +376,10 @@ int calcCheck(int board[], int color) {
 			//}
 //			move = bishop(board, nx - x, ny - y);
 		}
-		else if (board[pos] == 2 + 6 * color) {
-//			move = queen(board, nx - x, ny - y);
+		else if (board[pos] == 2 + 6 * tempColor) {
+			move = queenCheck(board);
 		}
-		else if (board[pos] == 1 + 6 * color) {
+		else if (board[pos] == 1 + 6 * tempColor) {
 //			move = king(board, nx - x, ny - y);
 		}
 		if (move == 2) {
@@ -441,5 +429,57 @@ int bishopCheck(int board[]) {
 		}
 	}
 	cout << endl;
+	return 0;
+}
+
+int rookCheck(int board[]) {
+	int tempx, tempy, x2, y2, move;
+	x2 = pos % 8;
+	y2 = pos / 8;
+	for (int j = 0; j < 4 && move != 2; j++) {
+		if (j == 0) {
+			tempx = 7 - x2;
+			tempy = 0;
+		}
+		else if (j == 1) {
+			tempx = -7 + x2;
+		}
+		else if (j == 2) {
+			tempy = 7 - y2;
+			tempx = 0;
+		}
+		else if (j == 3) {
+			tempy = -7 + y2;
+		}
+		move = rook(board, tempx, tempy);
+	}
+	return move;
+}
+
+int queenCheck(int board[]) {
+	int move = 0;
+	move = rookCheck(board);
+	if (move != 2) {
+		move = bishopCheck(board);
+	}
+	return move;
+}
+
+int pawnCheck(int board[], int color) {
+	int x2, y2;
+	x2 = pos % 8;
+	y2 = pos / 8;
+	if (y2 != 7 - 7 * color) {
+		if (x2 != 7) {
+			if (board[pos +1 + (8 - (16 * color))] == 1 + 6 * oldColor) {
+				return 2;
+			}
+		}
+		if (x2 != 0) {
+			if (board[pos - 1 + (8 - (16 * color))] == 1 + 6 * oldColor) {
+				return 2;
+			}
+		}
+	}
 	return 0;
 }
