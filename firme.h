@@ -11,4 +11,5 @@ int calcCheck(int[], int);
 int bishopCheck(int[]);
 int rookCheck(int[]);
 int queenCheck(int[]);
-int pawnCheck(int[], int);
+int pawnCheck(int[]);
+int kingCheck(int[]);
