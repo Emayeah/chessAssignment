@@ -64,6 +64,7 @@ int main() {
 		}
 		else if (flag == 2) {
 			oppCheck = 1;
+			calcCheckmate(board, color);
 		}
 		else {
 			oppCheck = 0;
@@ -378,10 +379,12 @@ int calcCheck(int color) {
 				return temp;
 			}
 		}
-		temp++;
-		oldColor = tempColor;
-		tempColor++;
-		tempColor %= 2;
+		if (oppCheck != 1) {
+			temp++;
+			oldColor = tempColor;
+			tempColor++;
+			tempColor %= 2;
+		}
 	}
 	return 0;
 }
@@ -484,6 +487,10 @@ int kingCheck() {
 	y2 = pos / 8;
 	for (int i = -1; i < 1; i++) {
 		for (int j = -1; j < 1; j++) {
+			if (oppCheck == 1 && x2 + i > 0 && x2 + i < 7 && y2 + i > 0 && y2 + i < 7 && (board[pos + i + 8 * j] == 0 || board[pos + i + 8 * j] > 6 * oldColor && board[pos + i + 8 * j] <= 6 + 6 * oldColor)) {
+				copy(board, pos + i + 8 * j);
+				return 1;
+			}
 			if (x2 + i > 0 && x2 + i < 7 && y2 + i > 0 && y2 + i < 7 && board[pos + i + 8 * j] == 1 + 6 * oldColor) {
 				return 2;
 			}
@@ -505,6 +512,10 @@ int knightCheck() {
 				k++;
 			}
 			if (x2 - j >= 0 && x2 + j < 8 && y2 - k >= 0 && y2 + k < 8) {
+				if (oppCheck == 1 && (board[pos + i + 8 * j] == 0 || board[pos + i + 8 * j] > 6 * oldColor && board[pos + i + 8 * j] <= 6 + 6 * oldColor)) {
+					
+					return 1;
+				}
 				if (board[pos + j + k * 8] == 1 + 6 * oldColor) {
 					return 2;
 				}
