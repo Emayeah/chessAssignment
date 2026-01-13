@@ -1,0 +1,31 @@
+relazione scacchi
+consegna: implementare scacchi 1v1 (non contro un bot) con eventuali controlli sulle validita' delle mosse, non e' necessario implementare l'arrocco e l'en passant
+
+
+decisioni prese:
+come funziona il programma:
+c'e' un'array monodimensionale globale con i vari pezzi memorizzati, varie funzioni che verificano la validita' delle mosse e in fine controlla se l'avversario e' in scacco (il programma non controlla scacco matto) e usa una variabile che alterna da 0 a 1 per tenere traccia di chi e' il turno
+
+perche' array monodimensionale? originariamente l'array era locale ed e' piu' semplice passare array 1d ad altre funzioni, poi ho continuato a usare un'array 1d piuttosto che una matrice perche' e' piu' semplice da lavorare e eccetto per un paio di errori stupidi non ho mai ottenuto segfault a differenza di decine di segfault con una matrice
+
+difficolta' principale nell'implementazione: calcolare scacco matto, mi sono arreso (magari ci lavorero' in futuro); bisogna calcolare centinaia di mosse per vedere se l'avversario ha ancora una mossa legale ogni volta che l'avversario e' in scacco senza rompere il funzionamento del programma, cosa che richiede ore di testing
+
+cosa il programma controlla: se il pezzo che hai mosso e' il tuo, se le mosse sono 100% legali (self capturing, pezzi tra il punto di partenza e il punto di arrivo, out of bounds, se la mossa che hai fatto ti mette in scacco o se ti togie o no da scacco se sei in scacco...)
+
+non controlla scacco matto perche' la complessita' e' elevata e un'implementazione fatta male risuiterebbe in una vittoria non meritata
+
+la validita' dell'input viene controllata nella prima fase del programma: se il pezzo che hai mosso non e' il tuo, se risulta in self capturing o se la casella non esiste (f9 e' out of bounds) allora il programma chiede di nuovo l'input con l'opzione di cambiare il pezzo
+
+le firme sono in firme.h
+
+bug / problemi / cosa avrei fatto diversamente:
+non ce ne sono, non ho ancora testato il gioco con delle partite serie pero' ho testato il programma dopo aver aggiunto funzionalita'
+
+il programma non e' commentato e non e' ottimizzatissimo, pero' i nomi delle variabili e delle funzioni sono descrittive
+
+il programma era estremamente semplice da scrivere con le funzioni e non si e' rotto durante lo sviluppo
+
+
+come compilare:
+$ g++ ./scacchi.cpp
+

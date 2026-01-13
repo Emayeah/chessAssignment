@@ -1,7 +1,7 @@
 #include <iostream>
 #include "firme.h"
 using namespace std;
-int pos, npos, x, y, nx, ny, checkFlag, oppCheck, tempColor, oldColor, posbak, nposbak;
+int pos, npos, x, y, nx, ny, checkFlag, oppCheck, tempColor, oldColor, posbak, nposbak, promotion, pawnPos;
 int board[64];
 // pawn = 6
 // king = 1
@@ -18,6 +18,7 @@ int main() {
 	oppCheck = 0;
 	do {
 		do {
+			promotion = 0;
 			checkFlag = 0;
 			printBoard(color);
 			userInput(color);
@@ -51,6 +52,10 @@ int main() {
 				cout << "Invalid move\n";
 			}
 		} while (move == 1);
+		if (board[npos] == 6 + 6 * color && npos / 8 == 8 - 8 * color) {
+			promotion = 1;
+			pawnPos = npos;
+		}
 		checkFlag = 1;
 		tempColor = color + 1;
 		tempColor %= 2;
@@ -64,10 +69,12 @@ int main() {
 		}
 		else if (flag == 2) {
 			oppCheck = 1;
-			calcCheckmate(board, color);
 		}
 		else {
 			oppCheck = 0;
+			if (promotion == 1) {
+				pawnPromotion();
+			}
 		}
 		color++;
 		color %= 2;
@@ -158,7 +165,7 @@ void userInput(int color) {
 	char input[3];
 	do {
 		flag = 0;
-		if (oppCheck) {
+		if (oppCheck == 1) {
 			cout << "CHECK! ";
 		}
 		if (color) {
@@ -303,7 +310,6 @@ int bishop(int x2, int y2) {
 			if (board[pos + (i * flag) + (8 * i * flag2)] != 0) {
 				return 1;
 			}
-			board[pos + (i * flag) + (8 * i * flag2)] = 20;
 		}
 		return 0;
 	}
@@ -400,9 +406,6 @@ int bishopCheck() {
 		if (board[pos + i + 8 * i] == 1 + 6 * oldColor) {
 			return 2;
 		}
-		if (board[pos + i + 8 * i] == 0) {
-			board[pos + i + 8 * i] = 20;
-		}
 	}
 	//board[pos + i + 8 * i] = 20;
 	i = 1;
@@ -487,10 +490,6 @@ int kingCheck() {
 	y2 = pos / 8;
 	for (int i = -1; i < 1; i++) {
 		for (int j = -1; j < 1; j++) {
-			if (oppCheck == 1 && x2 + i > 0 && x2 + i < 7 && y2 + i > 0 && y2 + i < 7 && (board[pos + i + 8 * j] == 0 || board[pos + i + 8 * j] > 6 * oldColor && board[pos + i + 8 * j] <= 6 + 6 * oldColor)) {
-				copy(board, pos + i + 8 * j);
-				return 1;
-			}
 			if (x2 + i > 0 && x2 + i < 7 && y2 + i > 0 && y2 + i < 7 && board[pos + i + 8 * j] == 1 + 6 * oldColor) {
 				return 2;
 			}
@@ -512,10 +511,6 @@ int knightCheck() {
 				k++;
 			}
 			if (x2 - j >= 0 && x2 + j < 8 && y2 - k >= 0 && y2 + k < 8) {
-				if (oppCheck == 1 && (board[pos + i + 8 * j] == 0 || board[pos + i + 8 * j] > 6 * oldColor && board[pos + i + 8 * j] <= 6 + 6 * oldColor)) {
-					
-					return 1;
-				}
 				if (board[pos + j + k * 8] == 1 + 6 * oldColor) {
 					return 2;
 				}
@@ -525,3 +520,21 @@ int knightCheck() {
 	return 0;
 }
 
+void pawnPromotion() {
+	int color = pawnPos / 8 + 1;
+	color %= 2;
+	int temp;
+	do {
+		cout	<< "Promotion!\n"
+			<< "1) Queen\n"
+			<< "2) Rook\n"
+			<< "3) Bishop"
+			<< "4) Knight";
+		cin >> temp;
+		if (temp > 4 || temp < 1) {
+			cout << "Invalid option!\n";
+		}
+	} while (temp >= 1 && temp <= 4);
+	temp++;
+	board[pawnPos] = temp + 6 * color;
+}

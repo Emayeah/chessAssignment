@@ -14,3 +14,4 @@ int queenCheck();
 int pawnCheck();
 int kingCheck();
 int knightCheck();
+void pawnPromotion();
