@@ -52,7 +52,7 @@ int main() {
 				cout << "Invalid move\n";
 			}
 		} while (move == 1);
-		if (board[npos] == 6 + 6 * color && npos / 8 == 8 - 8 * color) {
+		if (board[npos] == 6 + 6 * color && npos / 8 == 7 - 7 * color) {
 			promotion = 1;
 			pawnPos = npos;
 		}
@@ -115,6 +115,7 @@ void initBoard() {
 //	board[35] = 2;
 //	board[42] = 6;
 //	board[45] = 5;
+//	board[55] = 6;
 }
 
 void printBoard(int color) {
@@ -469,9 +470,9 @@ int pawnCheck() {
 	int x2, y2;
 	x2 = pos % 8;
 	y2 = pos / 8;
-	if (y2 != 7 - 7 * tempColor) {
+	if (y2 != 7 && y2 != 0) {
 		if (x2 != 7) {
-			if (board[pos +1 + (8 - (16 * tempColor))] == 1 + 6 * oldColor) {
+			if (board[pos + 1 + (8 - (16 * tempColor))] == 1 + 6 * oldColor) {
 				return 2;
 			}
 		}
@@ -502,13 +503,19 @@ int knightCheck() {
 	int x2, y2;
 	x2 = pos % 8;
 	y2 = pos / 8;
-	for (int j = -2; j <= 2; j++) {
-		if (j == 0) {
-			j++;
+	int k = 0;
+	for (int k = -2; k <= 2; k++) {
+		if (k == 0) {
+			k++;
 		}
-		for (int k = -2; k <= 2; k++) {
-			if (k == 0) {
-				k++;
+		for (int j = -2; j <= 2; j += 4) {
+			if (k == 0 || k == 2) {
+				if (j == -2) {
+					j++;
+				}
+				else if (j == 3) {
+					j -= 2;
+				}
 			}
 			if (x2 - j >= 0 && x2 + j < 8 && y2 - k >= 0 && y2 + k < 8) {
 				if (board[pos + j + k * 8] == 1 + 6 * oldColor) {
@@ -528,13 +535,14 @@ void pawnPromotion() {
 		cout	<< "Promotion!\n"
 			<< "1) Queen\n"
 			<< "2) Rook\n"
-			<< "3) Bishop"
-			<< "4) Knight";
+			<< "3) Bishop\n"
+			<< "4) Knight\n"
+			<< ": ";
 		cin >> temp;
 		if (temp > 4 || temp < 1) {
 			cout << "Invalid option!\n";
 		}
-	} while (temp >= 1 && temp <= 4);
+	} while (temp > 4 || temp < 1);
 	temp++;
 	board[pawnPos] = temp + 6 * color;
 }
