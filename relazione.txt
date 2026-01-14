@@ -7,15 +7,10 @@ consegna: implementare scacchi 1v1 (non contro un bot) con eventuali controlli s
 decisioni prese:
 come funziona il programma:
 c'e' un'array monodimensionale globale con i vari pezzi memorizzati, varie funzioni che verificano la validita' delle mosse e in fine controlla se l'avversario e' in scacco (il programma non controlla scacco matto) e usa una variabile che alterna da 0 a 1 per tenere traccia di chi e' il turno
-
 perche' array monodimensionale? originariamente l'array era locale ed e' piu' semplice passare array 1d ad altre funzioni, poi ho continuato a usare un'array 1d piuttosto che una matrice perche' e' piu' semplice da lavorare e eccetto per un paio di errori stupidi non ho mai ottenuto segfault a differenza di decine di segfault con una matrice
-
 difficolta' principale nell'implementazione: calcolare scacco matto, mi sono arreso (magari ci lavorero' in futuro); bisogna calcolare centinaia di mosse per vedere se l'avversario ha ancora una mossa legale ogni volta che l'avversario e' in scacco senza rompere il funzionamento del programma, cosa che richiede ore di testing
-
 cosa il programma controlla: se il pezzo che hai mosso e' il tuo, se le mosse sono 100% legali (self capturing, pezzi tra il punto di partenza e il punto di arrivo, out of bounds, se la mossa che hai fatto ti mette in scacco o se ti togie o no da scacco se sei in scacco...)
-
 non controlla scacco matto perche' la complessita' e' elevata e un'implementazione fatta male risuiterebbe in una vittoria non meritata
-
 la validita' dell'input viene controllata nella prima fase del programma: se il pezzo che hai mosso non e' il tuo, se risulta in self capturing o se la casella non esiste (f9 e' out of bounds) allora il programma chiede di nuovo l'input con l'opzione di cambiare il pezzo
 
 le firme sono in firme.h
@@ -23,12 +18,12 @@ le firme sono in firme.h
 
 funzioni:
 main: sceglie quali funzioni da chiamare, non ha parametri
-calcCheck: in base al colore ricevuto come parametro per decidere quale colore controllare prima, itera tra l'intera scacchiera 2 volte, prima per vedere se il giocatore e' in scacco, poi per vedere se l'avversario e' in scacco. per controllare se qualcuno e' in scacco se vede una torre allora chiama una funzione che controlla se la torre "vede" il re o no; ritorna 0 se nessuno e' in scacco, 2 se il giocatore ha fatto una mossa che risulta in scacco, 3 se l'avversario e' in scacco
-*Check: in base al colore ricevuto come parametro per quale colore da controllare prima, determina se il pezzo sta scaccando l'avversario (pawnCheck: controlla se il pedone sta scaccando l'avversario, rookCheck: se la torre sta scaccando l'avversario). 2 se il pezzo vede il re, 0 se no
+calcCheck: in base al colore ricevuto come parametro per decidere quale colore controllare prima, itera tra l'intera scacchiera 2 volte, prima per vedere se il giocatore e' in scacco, poi per vedere se l'avversario e' in scacco. per controllare se qualcuno e' in scacco se vede una torre allora chiama una funzione che controlla se la torre "vede" il re o no; ritorna 0 se nessuno e' in scacco, 1 se il giocatore ha fatto una mossa che risulta in scacco, 2 se l'avversario e' in scacco
+*Check: in base al colore ricevuto come parametro, determina se il pezzo sta scaccando l'avversario (pawnCheck: controlla se il pedone sta scaccando l'avversario, rookCheck: se la torre sta scaccando l'avversario). 2 se il pezzo "vede" il re, 0 se no
 nome pezzo (rook, queen, pawn): controlla la validita' delle mosse, 0 se valido, 1 se invalido (rook d4 -> rook d8, se in d6 c'e' un altro pezzo allora mossa invalida)
-userInput: richiede input e fa controlli basi per la validita': d9 non esiste, f7 e' il pezzo dell'avversario, d3 -> d5 risulta in self capturing
+userInput: richiede input e fa controlli base per la validita': d9 non esiste, f7 e' il pezzo dell'avversario, d3 -> d5 risulta in self capturing, poi li mette in variabili globali
 printBoard: stampa la tavola, colore come parametro per orientare la tavola nel senso giusto
-initBoard: inizializzazione tavola con i pezzi al posto giusto
+initBoard: inizializzazione tavola con i pezzi al posto giusto, non ha parametri
 
 bug / problemi / cosa avrei fatto diversamente:
 non ce ne sono, non ho ancora testato il gioco con delle partite serie pero' ho testato il programma dopo aver aggiunto funzionalita'
