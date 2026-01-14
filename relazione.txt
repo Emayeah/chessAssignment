@@ -1,3 +1,5 @@
+English version coming in the future
+
 relazione scacchi
 consegna: implementare scacchi 1v1 (non contro un bot) con eventuali controlli sulle validita' delle mosse, non e' necessario implementare l'arrocco e l'en passant
 
@@ -17,6 +19,16 @@ non controlla scacco matto perche' la complessita' e' elevata e un'implementazio
 la validita' dell'input viene controllata nella prima fase del programma: se il pezzo che hai mosso non e' il tuo, se risulta in self capturing o se la casella non esiste (f9 e' out of bounds) allora il programma chiede di nuovo l'input con l'opzione di cambiare il pezzo
 
 le firme sono in firme.h
+
+
+funzioni:
+main: sceglie quali funzioni da chiamare, non ha parametri
+calcCheck: in base al colore ricevuto come parametro per decidere quale colore controllare prima, itera tra l'intera scacchiera 2 volte, prima per vedere se il giocatore e' in scacco, poi per vedere se l'avversario e' in scacco. per controllare se qualcuno e' in scacco se vede una torre allora chiama una funzione che controlla se la torre "vede" il re o no; ritorna 0 se nessuno e' in scacco, 2 se il giocatore ha fatto una mossa che risulta in scacco, 3 se l'avversario e' in scacco
+*Check: in base al colore ricevuto come parametro per quale colore da controllare prima, determina se il pezzo sta scaccando l'avversario (pawnCheck: controlla se il pedone sta scaccando l'avversario, rookCheck: se la torre sta scaccando l'avversario). 2 se il pezzo vede il re, 0 se no
+nome pezzo (rook, queen, pawn): controlla la validita' delle mosse, 0 se valido, 1 se invalido (rook d4 -> rook d8, se in d6 c'e' un altro pezzo allora mossa invalida)
+userInput: richiede input e fa controlli basi per la validita': d9 non esiste, f7 e' il pezzo dell'avversario, d3 -> d5 risulta in self capturing
+printBoard: stampa la tavola, colore come parametro per orientare la tavola nel senso giusto
+initBoard: inizializzazione tavola con i pezzi al posto giusto
 
 bug / problemi / cosa avrei fatto diversamente:
 non ce ne sono, non ho ancora testato il gioco con delle partite serie pero' ho testato il programma dopo aver aggiunto funzionalita'

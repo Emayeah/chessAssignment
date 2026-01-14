@@ -546,3 +546,4 @@ void pawnPromotion() {
 	temp++;
 	board[pawnPos] = temp + 6 * color;
 }
+
