@@ -69,6 +69,7 @@ int main() {
 		}
 		else if (flag == 2) {
 			oppCheck = 1;
+			calcCheckmate(color);
 		}
 		else {
 			oppCheck = 0;
@@ -547,3 +548,20 @@ void pawnPromotion() {
 	board[pawnPos] = temp + 6 * color;
 }
 
+int calcCheckmate(int color) {
+	int oppColor = color + 1;
+	oppColor %= 2;
+	for (int i = 0; i < 64; i++) {
+		if (board[i] == 6 + 6 * oppColor) {
+			pawnCm();
+		}
+	}
+}
+
+int pawnCm(int oppColor, int color, int pos) {
+	if (i + 8 + (16 * oppColor * -1) >= 0 && i + 8 + (16 * oppColor * -1) < 64) {
+		if (board[i + 8 + (16 * oppColor * -1)] == 0) {
+			//todo not finished i may have to refactor code or build new stuff like functions
+		}
+	}
+}

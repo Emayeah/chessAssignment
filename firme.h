@@ -15,3 +15,5 @@ int pawnCheck();
 int kingCheck();
 int knightCheck();
 void pawnPromotion();
+int calcCheckmate(int);
+int pawnCm(int, int, int);
