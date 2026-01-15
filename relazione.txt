@@ -36,3 +36,4 @@ il programma era estremamente semplice da scrivere con le funzioni e non si e' r
 come compilare:
 $ g++ ./scacchi.cpp
 
+v1 = compito consegnato, futuri commit non fanno parte del compito finito
