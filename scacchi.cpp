@@ -329,7 +329,7 @@ int king(int x2, int y2) {
 	if ((x2 == 0 || x2 == 1 || x2 == -1) && (y2 == 0 || y2 == 1 || y2 == -1)) {
 		return queen(x2, y2);
 	}
-	return 0;
+	return 1;
 }
 
 int calcCheck(int color) {
